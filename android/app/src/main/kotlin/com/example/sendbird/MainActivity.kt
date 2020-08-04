@@ -1,5 +1,6 @@
 package com.example.sendbird
 
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -7,6 +8,10 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
+import android.widget.Toast
 import com.sendbird.calls.*
 import com.sendbird.calls.handler.AuthenticateHandler
 import com.sendbird.calls.handler.DialHandler
@@ -15,6 +20,9 @@ import com.sendbird.calls.handler.SendBirdCallListener
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugins.GeneratedPluginRegistrant
+import kotlin.math.log
+import io.flutter.embedding.android.FlutterView;
 
 
 class MainActivity: FlutterActivity() {
@@ -29,8 +37,11 @@ class MainActivity: FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
                 .setMethodCallHandler { call, result ->
                     if(call.method.equals("sendBird")){
-//                        init(APP_ID);
+//                        val value = init(call.argument("APP_ID"))
+//                        result.success(value);
 //                        authenticate()
+                        val intent = Intent(applicationContext, CameraActivity::class.java)
+                        startActivity(intent)
                     }else if(call.method.equals("getBatteryLevel")){
                         val batteryLevel = getBatteryLevel()
 
@@ -59,8 +70,9 @@ class MainActivity: FlutterActivity() {
         return batteryLevel
     }
 
-    fun init(APP_ID: String){
-        SendBirdCall.init(applicationContext, APP_ID)
+    fun init(APP_ID: String?) : String {
+        return APP_ID!!;
+//        SendBirdCall.init(applicationContext, APP_ID)
     }
 
     fun authenticate(USER_ID: String, ACCESS_TOKEN: String, PUSH_TOKEN: String, isUnique: Boolean){

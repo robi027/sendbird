@@ -54,6 +54,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   static const platform = const MethodChannel('samples.flutter.dev/battery');
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void _incrementCounter() {
     setState(() {
       _counter++;
@@ -77,6 +82,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _getInit() async {
+    try {
+      await platform.invokeMethod('sendBird', <String, dynamic>{
+        "APP_ID": "FROM_DART"
+      });
+//      print("result $result");
+    } on PlatformException catch (e) {
+      print("error $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             RaisedButton(
               child: Text('Get Battery Level'),
-              onPressed: _getBatteryLevel,
+              onPressed: _getInit,
             ),
             Text(_batteryLevel),
           ],
